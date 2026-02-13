@@ -27,7 +27,7 @@ If the service is running, you'll see output like the following:
     redis (homebrew.mxcl.redis)
     Running: ✔
     Loaded: ✔
-    User: miranda
+    User: gailcliff
     PID: 67975
 
 
