@@ -1,0 +1,42 @@
+First install redis in terminal (make sure brew is active in the terminal instance)
+
+    brew install redis
+
+Add brew to your PATH by adding the following line to .zshrc (on Mac):
+
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+
+Still make sure brew is active or in your path to run redis.
+To start the redis server, run:
+    redis-server
+This will only be temporary in the foreground and you can stop the server through Ctrl-C
+
+If you want to run the redis server in the background (as a service), run:
+
+    brew services start redis
+
+
+This launches Redis and restarts it at login.
+You can check the status of a launchd managed Redis by running the following:
+
+    brew services info redis
+
+
+If the service is running, you'll see output like the following:
+
+    redis (homebrew.mxcl.redis)
+    Running: ✔
+    Loaded: ✔
+    User: miranda
+    PID: 67975
+
+
+To stop the service, run:
+
+    brew services stop redis
+
+
+To test redis as a client, run the:
+      redis-cli
+command. You will be able to add and pop key-value pairs.
+A client can be something else like python code!

@@ -1,0 +1,167 @@
+
+
+
+TABS
+If you need to add a row of tabs to a page in your screen, use the TabBar widget.
+But, the parent widget of your child widgets has to be a DefaultTabController widget.
+i.e in your Stateless or Stateful widget class, return DefaultTabController in your build() method.
+
+E.g
+ return DefaultTabController(
+  initialIndex: 0,
+  length: 2,
+  child: ListView(
+    children: [
+      const SizedBox(height: 10,),
+      ...
+      TabBar(
+        tabs: const [
+          Tab(text: "Lend"),
+          Tab(text: "Loan"),
+      ],
+      onTap: (int tab) { },
+      ),
+       ...
+    ]
+)
+)
+
+KEYBOARD DISPLACING UI
+If you want to prevent the keyboard from resizing the UI when you're editing a TextField, set the
+'resizeToAvoidBottomInset' property of the parent Scaffold to false.
+The problem is, setting it to false makes the UI not move at all when you activate the keyboard. This
+might be an issue because the keyboard will just block the UI that is behind it, so if the TextField
+was in a position that was say, close to the bottom, it will be hidden out of view.
+The best bet is just to leave the resizeToAvoidBottomInset property as is and wrap your TextFields
+with a scrollable widget wherever you're using them (if need be). This will ensure the UI scrolls
+up and moves accordingly when a TextField is being edited.
+
+
+SHOWING A ROUTE WITH BOTTOM-TO-UP ANIMATION INSTEAD OF DEFAULT RIGHT-TO-LEFT (etc)
+When using Navigator.push with MaterialPageRoute, set the 'fullscreenDialog' property of MaterialPageRoute
+to true.
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) {
+          return const TagAdder();
+        }
+      )
+    );
+
+
+HOW TO PREVENT A TEXTFIELD FROM SHOWING THE COUNTER TEXT BELOW IT (If you have set maxLength property)
+Do this:
+TextField(
+  maxLength: 10,
+  decoration: InputDecoration(
+    counterText: '', // Just set the counterText to an empty string
+    labelText: 'Enter text',
+  ),
+)
+
+
+SWIPE DOWN TO REFRESH
+Use the RefreshIndicator widget
+
+return RefreshIndicator(
+  // displacement: 100,
+  onRefresh: () async {
+  },
+  child: <your_widget_here>
+}
+
+
+ERROR: setState() called during build()
+
+This happens when you do something that affects the state while build() hasn't yet completed. What you can do is wrap whatever
+computation you want to do in a Future so that it is executed after the synchronous code
+
+E.g:
+
+Widget build(context) {
+
+    Future.delayed(Duration.zero, () async {
+      discover(); // computation here that will affect state
+    });
+
+    return <widget_here>
+}
+
+
+NOTE!!!
+Don't use any BuildContext across async gaps.
+
+
+MANIPULATING LISTVIEW
+It is advisable to add a key to each child widget in your scrollable widget like ListView if you want the listview to be dynamic,
+i.e items can be added, removed, be re-inserted etc. One of the easiest ways to do this is to use a unique key.
+
+E.g
+return ListView.builder(
+    itemCount: manager.proposalItems!.length,
+    itemBuilder: (context, pos) {
+      final item = manager.proposalItems![pos];
+
+      return SimpleFeedItem(
+        key: UniqueKey(),   // this will provide a unique key to each item in the list that is used when list is being manipulated
+        loProposal: item
+      );
+    }
+  );
+
+
+
+LISTENING FOR APP-CYCLE EVENTS
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp();
+  }
+}
+
+
+
+EXITING APP IN FLUTTER
+
+Call the exit method:
+    exit(0);
+
+
+HOW TO MAKE COLUMN CHILDREN HAVE MAX WIDTH
+Use crossAxisAlignment property and set it to 'stretch'
+Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    // --- from docs ---
+    /// Require the children to fill the cross axis.
+    ///
+    /// This causes the constraints passed to the children to be tight in the
+    /// cross axis.
+
+    children: [...]
+)
